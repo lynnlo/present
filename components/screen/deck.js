@@ -85,7 +85,7 @@ export default class Deck extends React.Component {
     return (
       <div>
         <Head>
-          <link rel="stylesheet" href="https://f1.srnd.org/fonts/gosha-sans/all.css" />
+          <link rel="stylesheet" href="https://f1.codeday.org/fonts/gosha-sans/all.css" />
         </Head>
         {currentSlide > 0 && (
           <UiContainer style={{ left: '1vh' }} onClick={() => this.navigate(-1)}>

@@ -10,6 +10,8 @@ import Judging from './judging';
 import Black from './black';
 import Theme from './theme';
 import CustomSlide from './custom-slide';
+import Covid from './covid';
+import Explainer from './explainer';
 
 export {
   Title,
@@ -24,4 +26,6 @@ export {
   Black,
   Theme,
   CustomSlide,
+  Covid,
+  Explainer,
 };
