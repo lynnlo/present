@@ -8,6 +8,7 @@
     "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
+    "@codeday/topo": "^4.1.0",
     "@srnd/topocons": "^1.1.2",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
@@ -15,6 +16,7 @@
     "dotenv": "^8.1.0",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
+    "luxon": "^2.1.1",
     "markdown-it": "^10.0.0",
     "memoize-one": "^5.1.1",
     "moment": "^2.24.0",

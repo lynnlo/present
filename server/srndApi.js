@@ -3,133 +3,153 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import superagent from 'superagent';
 import gql from 'graphql-tag';
+import { apiFetch } from '@codeday/topo/utils';
+import { DateTime } from 'luxon';
 import config from './config';
 
+function clearTimezone(timezone) {
+  return timezone.split('Z')[0];
+}
 
 export default class EventInfoApi {
   static async getEventInfo(eventId) {
-    const clearInfo = await this.getClear(eventId);
-    const prismicInfo = await this.getPrismic(this.getPrismicSeasonForEvent(clearInfo));
-
-    return { ...clearInfo, ...prismicInfo, id: eventId };
+    return this.getClear(eventId);
   }
 
   static async getGlobalSponsors() {
-    const spaceId = await config.get('CONTENTFUL_SPACE');
-    const spaceToken = await config.get('CONTENTFUL_TOKEN');
-    const base = `https://cdn.contentful.com/spaces/${spaceId}/environments/master`;
-    const url = `${base}/entries?content_type=globalSponsor&access_token=${spaceToken}`;
+    const res = await apiFetch(`query {
+      cms {
+        globalSponsors {
+          items {
+            name
+              logo {
+                url(transform:{width:700})
+              }
+              audio {
+                url
+              }
+          }
+        }
+      }
+    }`);
 
-    try {
-      const data = JSON.parse((await superagent.get(url)).text);
-      const linkAsset = (id) => data.includes.Asset.find((a) => a.sys.id === id).fields.file.url;
-
-      return data.items.map((i) => ({
-        ...i.fields,
-        logo: i.fields.logo && linkAsset(i.fields.logo.sys.id),
-        audio: i.fields.audio && linkAsset(i.fields.audio.sys.id),
-      }));
-    } catch (ex) {
-      return [];
-    }
+    return res.cms.globalSponsors.items.map((sponsor) => ({
+      name: sponsor.name,
+      logo: sponsor.logo?.url,
+      audio: sponsor.audio?.url,
+    }));
   }
 
   static async getCommunityPartners(event) {
-    const url = `https://micro.srnd.org/community-partners?region=${event.webname}`;
-    try {
-      return JSON.parse((await superagent.get(url)).text);
-    } catch (ex) {
-      return null;
-    }
+    return []; // TODO(@tylermenezes)
   }
 
   static async getHackathons(event) {
-    const url = `https://micro.srnd.org/hackathons?region=${event.webname}`;
-    try {
-      return JSON.parse((await superagent.get(url)).text);
-    } catch (ex) {
-      return null;
-    }
-  }
-
-  static getPrismicSeasonForEvent(event) {
-    if (!event.batchDate) return null;
-
-    const date = event.batchDate.split('-');
-    const seasons = [
-      ...Array(3).fill('winter'),
-      ...Array(3).fill('spring'),
-      ...Array(2).fill('summer'),
-      ...Array(3).fill('fall'),
-      'winter',
-    ];
-    const season = seasons[Number(date[1]) - 1];
-    return `${date[0]}-${season}`;
+    return []; // TODO(@tylermenezes)
   }
 
   static async getAllEvents() {
-    const url = `https://www.codeday.org/index.json`;
-    try {
-      return JSON.parse((await superagent.get(url)).text);
-    } catch (ex) {
-      return [];
-    }
+    const events = await apiFetch(`
+      query AllEvents($now: ClearDateTime!){
+        clear {
+          events(where:{startDate:{gte:$now}}) {
+            id
+            name
+          }
+        }
+      }
+    `, { now: DateTime.now().toISO() });
+    return events.clear.events;
   }
 
   static async getClear(eventId) {
-    const clearPub = await config.get('CLEAR_PUBLIC');
-    const clearPriv = await config.get('CLEAR_PRIVATE');
-
-    const url = `https://clear.codeday.org/api/event/${eventId}?public=${clearPub}&private=${clearPriv}`;
-    try {
-      const data = JSON.parse((await superagent.get(url)).text);
-      return {
-        name: data.name,
-        webname: data.webname,
-        regionName: data.region_name,
-        batchName: data.batch.name,
-        batchDate: data.batch.starts_at,
-        venueName: data.venue && data.venue.name,
-        startsAt: data.starts_at,
-        endsAt: data.ends_at,
-        tz: data.timezone,
-        schedule: data.schedule,
-        sponsors: data.sponsors,
-      };
-    } catch (ex) {
-      return {};
-    }
-  }
-
-  static async getPrismic(season) {
-    const client = new ApolloClient({
-      link: PrismicLink({
-        uri: 'https://srnd-codeday.prismic.io/graphql',
-      }),
-      cache: new InMemoryCache(),
-    });
-
-    try {
-      const { theme, theme_images: themeImages, kickoffvideo: kickoffVideo } = (await client.query({
-        query: gql`
-          query {
-            season(uid: "${season}", lang: "en-us") {
-              kickoffvideo
-              theme
-              theme_images {
-                image
-              }
+    const res = await apiFetch(`
+      query GetEventQuery ($eventId: String!, $now: CmsDateTime!){
+        clear {
+          event(where:{id: $eventId}) {
+            id
+            regionName: name
+            webname: contentfulWebname
+            startDate
+            endDate
+            venue {
+              name
+            }
+            sponsors {
+              name
+              logo: logoImageUri
+            }
+            schedule(orderBy:{start:asc}, where:{finalized: { equals: true }, internal: { equals: false }}) {
+              name
+              start
+            }
           }
-        }`,
-      })).data.season;
+        }
 
-      return {
-        kickoffVideo: kickoffVideo ? kickoffVideo.embed_url : null,
-        theme,
-        themeImages: themeImages.map(i => i.image.url),
-       };
-    } catch (ex) {
-      return {};
-    }
+        cms {
+          events (limit: 1, where: { program:{ webname:"codeday" }, endsAt_gte: $now }) {
+            items {
+              title
+              startsAt
+              kickoffVideo {
+                url
+              }
+              theme
+              themeBackgrounds {
+                items {
+                  url(transform:{width:1920, height:1080, resizeStrategy:FIT})
+                }
+              }
+            }
+          }
+        }
+      }
+    `, { eventId, now: DateTime.now().toISO()  });
+
+    const event = res.clear?.event;
+    const eventGroup = res.cms?.events?.items[0];
+    if (!eventGroup || !event) return null;
+
+    const region = await apiFetch(`
+      query GetRegion ($webname: String!) {
+        cms {
+          regions (where:{webname: $webname}, limit: 1) {
+            items {
+              timezone
+            }
+          }
+        }
+      }
+    `, { webname: event.webname })
+    const timezone = region?.cms?.regions.items[0]?.timezone || 'America/Los_Angeles';
+
+
+    const eventStart = DateTime.fromISO(clearTimezone(event.startDate), { zone: timezone }).set({ hour: 12 });
+    const eventEnd = DateTime.fromISO(clearTimezone(event.endDate), { zone: timezone }).set({ hour: 12 });
+
+    return {
+      id: eventId,
+      name: `CodeDay ${event.regionName} ${eventGroup.title.replace('CodeDay ', '')}`,
+      webname: event.webname,
+      regionName: event.regionName,
+      batchName: eventGroup.title.replace('CodeDay ', ''),
+      venueName: event.venue?.name,
+      startsAt: eventStart.toISO(),
+      endsAt: eventEnd.toISO(),
+      tz: timezone,
+      schedule: {X: event.schedule?.map((se) => ({
+        title: se.name,
+        time: Math.round(DateTime.fromISO(se.start).setZone(timezone).diff(eventStart, 'hours').hours*100)/100,
+        hour: DateTime.fromISO(se.start).setZone(timezone).toFormat('h:mm a'),
+        timestamp: {
+          date: DateTime.fromISO(se.start).setZone(timezone).toISO(),
+          timezone,
+        },
+      }))},
+      sponsors: event.sponsors,
+      kickoffVideo: eventGroup.kickoffVideo?.url,
+      theme: eventGroup.theme,
+      themeImages: eventGroup.themeBackgrounds?.items?.map((b) => b.url),
+    };
   }
 }

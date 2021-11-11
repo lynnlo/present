@@ -42,29 +42,44 @@ export default class Video extends React.Component {
       );
     }
 
-    const videoId = QueryString.parse(Url.parse(event.kickoffVideo).query).v;
-    const opts = {
-      playerVars: {
-        cc_load_policy: 1,
-        controls: 1,
-        disablekb: 1,
-        fs: 0,
-        iv_load_policy: 3,
-        modestbranding: 1,
-        rel: 0,
-        autoplay: 1,
-      },
-    };
+    const kickoffUrl = Url.parse(event.kickoffVideo);
+
+    if (kickoffUrl.host === 'youtube.com' || kickoffUrl.host === 'youtu.be') {
+
+      const videoId = QueryString.parse(kickoffUrl.query).v;
+      const opts = {
+        playerVars: {
+          cc_load_policy: 1,
+          controls: 1,
+          disablekb: 1,
+          fs: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          rel: 0,
+          autoplay: 1,
+        },
+      };
+
+      return (
+        <Slide bg="#000">
+          <VideoWrapper>
+            <YouTube
+              videoId={videoId}
+              opts={opts}
+              autoplay
+              onEnd={nextSlide}
+            />
+          </VideoWrapper>
+        </Slide>
+      );
+    }
 
     return (
       <Slide bg="#000">
         <VideoWrapper>
-          <YouTube
-            videoId={videoId}
-            opts={opts}
-            autoplay
-            onEnd={nextSlide}
-          />
+          <video autoplay controls style={{ width: '100%', height: '100%' }}>
+            <source src={event.kickoffVideo} />
+          </video>
         </VideoWrapper>
       </Slide>
     );

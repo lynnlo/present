@@ -59,6 +59,8 @@ export default class Provider extends React.Component {
 
   schedule = memoize((event) => {
     const result = {};
+  console.log(event.schedule);
+
     Object
       .values(event.schedule)
       .reduce((a, b) => a.concat(b), [])

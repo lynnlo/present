@@ -17,7 +17,7 @@ export default class Settings extends React.Component {
       ssid: '',
       pass: '',
       timeFormat: 'h:mma',
-      radio: true,
+      radio: false,
       hashtag: props.event.webname,
       additionalSlides: null,
     };
@@ -59,7 +59,7 @@ export default class Settings extends React.Component {
           <option value="h:mma" selected={timeFormat === 'h:mma'}>12-hour</option>
           <option value="H:mm" selected={timeFormat === 'H:mm'}>24-hour</option>
         </select>
-
+        {/*
         <h2>CodeDay Radio</h2>
         <p>
           CodeDay Radio is a live internet radio station synchronized between all CodeDays. If you think you&apos;ll
@@ -69,6 +69,7 @@ export default class Settings extends React.Component {
           <option selected={radio} value="true">Yes, I plan to play CodeDay Radio</option>
           <option selected={!radio} value="false">No, opt me out of CodeDay Radio</option>
         </select>
+        */}
 
         <h2>Additional Slides</h2>
         <p>

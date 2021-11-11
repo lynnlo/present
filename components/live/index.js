@@ -99,7 +99,7 @@ export default class Live extends React.Component {
     return (
       <Slide padding="0">
         <Head>
-          <link rel="stylesheet" href="https://f1.srnd.org/fonts/gosha-sans/all.css" />
+          <link rel="stylesheet" href="https://f1.codeday.org/fonts/gosha-sans/all.css" />
         </Head>
         <ScheduleBox>
           <Schedule event={event} config={config} />

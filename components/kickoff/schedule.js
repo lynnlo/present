@@ -68,6 +68,8 @@ export default class Schedule extends React.Component {
     const workSchedule = fullSchedule.filter((evt) => evt.time <= 6.5);
     const funSchedule = fullSchedule.filter((evt) => evt.time > 6.5).filter((evt) => evt.time < 17);
 
+    console.log(fullSchedule, workSchedule, funSchedule, event.schedule);
+
     const drawSchedule = (schedule) => schedule.map((evt) => (
       <ScheduleEntry key={`${evt.hour}-${evt.title}`}>
         <span>{evt.hour}</span>
