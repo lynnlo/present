@@ -20,6 +20,7 @@ import {
   CustomSlide,
   Covid,
   Explainer,
+  Showcase,
 } from '../../../../components/kickoff';
 
 export default withRouter(class Index extends React.Component {
@@ -69,15 +70,16 @@ export default withRouter(class Index extends React.Component {
           <Title />
           {event.kickoffVideo ? <Video /> : null}
           {globalSponsors && globalSponsors.filter((s) => s.audio).length > 0 ? <VideoSponsors /> : null }
+          <Sponsors />
           <CreateCode />
-          <Explainer />
           {event.theme ? <Theme /> : null}
+          <Explainer />
           <Judging />
           <Conduct />
           <Covid />
           <Schedule />
           { additionalSlides ? additionalSlides.map(slide => <CustomSlide content={slide} />) : null }
-          <Sponsors />
+          <Showcase />
           <Pitches />
         </Deck>
       </div>

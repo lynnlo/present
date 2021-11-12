@@ -77,8 +77,17 @@ export default class Video extends React.Component {
     return (
       <Slide bg="#000">
         <VideoWrapper>
-          <video autoplay controls style={{ width: '100%', height: '100%' }} onEnded={nextSlide}>
+          <video
+            autoPlay
+            controls
+            style={{ width: '100%', height: '100%' }}
+            onEnded={nextSlide}
+            crossOrigin="anonymous"
+          >
             <source src={event.kickoffVideo} />
+            {event.kickoffVideoCaptions && (
+               <track label="English" kind="subtitles" srcLang="en" src={event.kickoffVideoCaptions} default></track>
+            )}
           </video>
         </VideoWrapper>
       </Slide>

@@ -12,6 +12,7 @@ import Theme from './theme';
 import CustomSlide from './custom-slide';
 import Covid from './covid';
 import Explainer from './explainer';
+import Showcase from './showcase';
 
 export {
   Title,
@@ -28,4 +29,5 @@ export {
   CustomSlide,
   Covid,
   Explainer,
+  Showcase,
 };

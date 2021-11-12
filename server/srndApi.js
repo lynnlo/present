@@ -94,6 +94,9 @@ export default class EventInfoApi {
               kickoffVideo {
                 url
               }
+              kickoffVideoCaptions {
+                url
+              }
               theme
               themeBackgrounds {
                 items {
@@ -148,6 +151,7 @@ export default class EventInfoApi {
       }))},
       sponsors: event.sponsors,
       kickoffVideo: eventGroup.kickoffVideo?.url,
+      kickoffVideoCaptions: eventGroup.kickoffVideoCaptions?.url,
       theme: eventGroup.theme,
       themeImages: eventGroup.themeBackgrounds?.items?.map((b) => b.url),
     };
