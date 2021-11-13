@@ -52,7 +52,7 @@ export default class EventInfoApi {
     const events = await apiFetch(`
       query AllEvents($now: ClearDateTime!){
         clear {
-          events(where:{startDate:{gte:$now}}) {
+          events(where:{endDate:{gte:$now}}) {
             id
             name
           }
