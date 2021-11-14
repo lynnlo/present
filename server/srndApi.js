@@ -58,7 +58,7 @@ export default class EventInfoApi {
           }
         }
       }
-    `, { now: DateTime.now().toISO() });
+    `, { now: DateTime.now().minus({ days: 1 }).toISO() });
     return events.clear.events;
   }
 
@@ -107,7 +107,7 @@ export default class EventInfoApi {
           }
         }
       }
-    `, { eventId, now: DateTime.now().toISO()  });
+    `, { eventId, now: DateTime.now().minus({ days: 1 }).toISO()  });
 
     const event = res.clear?.event;
     const eventGroup = res.cms?.events?.items[0];
