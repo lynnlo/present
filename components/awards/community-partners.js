@@ -43,7 +43,7 @@ export default class CommunityPartners extends React.Component {
         <Title>What&apos;s next for you? Some local ideas:</Title>
         {communityPartners.map((partner) => partner && partner.logo && (
           <PartnerBox>
-            <PartnerLogo style={{ backgroundImage: `url(${partner.logo.large.url})` }} />
+            <PartnerLogo style={{ backgroundImage: `url(${partner.logo})` }} />
             <PartnerInfo>
               <p>{partner.display_url}</p>
               <p>{partner.blurb}</p>

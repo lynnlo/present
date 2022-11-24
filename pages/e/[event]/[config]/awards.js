@@ -49,7 +49,7 @@ export default withRouter(class Index extends React.Component {
 
   render() {
     const { event, communityPartners, hackathons } = this.props;
-    const groupedPartners = this.groupsOf(communityPartners, 2);
+    const groupedPartners = this.groupsOf(communityPartners.filter((partner) => partner.logo), 2);
     const groupedHackathons = this.groupsOf(hackathons, 10);
 
     return (

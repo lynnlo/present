@@ -55,12 +55,10 @@ export default class EventInfoApi {
     }
     }`);
 
-    return res.cms.globalSponsors.items.map((communityPartner) => ({
-      display_url: communityPartner.display_url,
+    return res.cms.communityPartners.items.map((communityPartner) => ({
+      display_url: communityPartner.displayUrl,
       blurb: communityPartner.blurb,
-      logo: {
-        large: communityPartner.logo?.url
-      }
+      logo: communityPartner.logo?.url
     }))
   }
 
