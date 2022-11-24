@@ -41,7 +41,27 @@ export default class EventInfoApi {
   }
 
   static async getCommunityPartners(event) {
-    return []; // TODO(@tylermenezes)
+    const res = await apiFetch(`query {
+    cms {
+      communityPartners {
+        items {
+          logo {
+            url
+          }
+          displayUrl
+          blurb
+        }
+      }
+    }
+    }`);
+
+    return res.cms.globalSponsors.items.map((communityPartner) => ({
+      display_url: communityPartner.display_url,
+      blurb: communityPartner.blurb,
+      logo: {
+        large: communityPartner.logo?.url
+      }
+    }))
   }
 
   static async getHackathons(event) {
