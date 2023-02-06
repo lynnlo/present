@@ -26,14 +26,14 @@ export default () => (
   <Slide>
     <AwardBlock>
       <Title>
-        Awards based on <FeaturedText>difficulty</FeaturedText> and <FeaturedText>creativity.</FeaturedText>
+        Local Event Awards
       </Title>
       <div>
         <img src="https://f1.srnd.org/codeday/awards/HoloBestInShow.png" alt="Best in Show" />
         <img src="https://f1.srnd.org/codeday/awards/HoloBestInClassStack.png" alt="Best in Class (2x)" />
         <img src="https://f1.srnd.org/codeday/awards/HoloSpecialStack.png" alt="Special Prize (3x)" />
       </div>
-      <Large>(Try something new &amp; have fun. We&apos;re not very competitive.)</Large>
+      <Large>Based on <FeaturedText>creativity</FeaturedText> and <FeaturedText>trying something new</FeaturedText>.</Large>
     </AwardBlock>
   </Slide>
 );

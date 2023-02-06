@@ -16,6 +16,27 @@ export default class EventInfoApi {
     return this.getClear(eventId);
   }
 
+  static async getPastProjects() {
+    const res = await apiFetch(`query {
+      showcase {
+        projects (where: { program: "codeday", featured: true, type: GAME, media: IMAGES }, take: 40) {
+          id
+          name
+          eventGroup {
+            title
+          }
+          media(topics:[TEAM,DEMO,PRESENTATION]) {
+            image(width: 1920, height: 1080)
+            type
+          }
+        }
+      }
+    }`);
+
+  return res.showcase?.projects;
+
+  }
+
   static async getGlobalSponsors() {
     const res = await apiFetch(`query {
       cms {

@@ -12,15 +12,18 @@ import {
   VideoSponsors,
   CreateCode,
   Judging,
+  JudgingWorldChampion,
   Conduct,
   Schedule,
   Sponsors,
   Pitches,
   Theme,
   CustomSlide,
-  Covid,
   Explainer,
   Showcase,
+  WhatsNext,
+  BadProjects,
+  GoodProjects,
 } from '../../../../components/kickoff';
 
 export default withRouter(class Index extends React.Component {
@@ -32,9 +35,10 @@ export default withRouter(class Index extends React.Component {
   }
 
   static async getInitialProps(router) {
-    const [event, globalSponsors] = await Promise.all([
+    const [event, globalSponsors, pastProjects] = await Promise.all([
       Srnd.getEventInfo(router.query.event),
       Srnd.getGlobalSponsors(),
+      Srnd.getPastProjects(),
     ]);
     const communityPartners = await Srnd.getCommunityPartners(event);
     const config = parseCode(router.query.config);
@@ -46,6 +50,7 @@ export default withRouter(class Index extends React.Component {
     return {
       event,
       globalSponsors,
+      pastProjects,
       communityPartners,
       config,
       additionalSlides,
@@ -57,6 +62,7 @@ export default withRouter(class Index extends React.Component {
       event,
       config,
       globalSponsors,
+      pastProjects,
       communityPartners,
       additionalSlides,
     } = this.props;
@@ -66,21 +72,24 @@ export default withRouter(class Index extends React.Component {
         <Head>
           <title>{`${event.name} Kickoff`}</title>
         </Head>
-        <Deck event={event} config={config} globalSponsors={globalSponsors} communityPartners={communityPartners}>
+        <Deck event={event} config={config} pastProjects={pastProjects} globalSponsors={globalSponsors} communityPartners={communityPartners}>
           <Title />
           {event.kickoffVideo ? <Video /> : null}
           {globalSponsors && globalSponsors.filter((s) => s.audio).length > 0 ? <VideoSponsors /> : null }
           <Sponsors />
-          <CreateCode />
-          {event.theme ? <Theme /> : null}
           <Explainer />
+          <CreateCode />
           <Judging />
+          <JudgingWorldChampion />
+          {event.theme ? <Theme /> : null}
+          <BadProjects />
+          {pastProjects && <GoodProjects />}
           <Conduct />
-          <Covid />
           <Schedule />
           { additionalSlides ? additionalSlides.map(slide => <CustomSlide content={slide} />) : null }
           <Showcase />
           <Pitches />
+          <WhatsNext />
         </Deck>
       </div>
     );

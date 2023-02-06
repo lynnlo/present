@@ -37,7 +37,7 @@ export default class Sponsor extends React.Component {
           <SponsorBox style={{ backgroundImage: `url(${sponsor.logo})` }} />
         ))}
 
-        {communityPartners.length > 0 && (
+        {communityPartners?.filter(p => p.logo?.url).length > 0 && (
           <>
             <SmallTitle>Community partners:</SmallTitle>
             {communityPartners.filter((partner) => partner.logo && partner.logo.url).map((partner) => (

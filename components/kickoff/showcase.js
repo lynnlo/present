@@ -12,7 +12,6 @@ export default () => (
   <Slide>
     <img src="/showcase.png" style={{ maxHeight: '60vh', border: '1px solid black' }} />
     <Title>Register your team ASAP @ <FeaturedText>Showcase.CodeDay.org</FeaturedText></Title>
-    <Text block>- Even if you don't know what you're making yet.</Text>
-    <Text block>- <FeaturedText>Assigns you a mentor</FeaturedText> to help @ discord.gg/codeday</Text>
+    <Text block>Even if you don't know what you're making yet.</Text>
   </Slide>
 );
