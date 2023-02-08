@@ -6,6 +6,7 @@ import { Title, Large } from '../screen/text';
 const badIdeas = [
   'portfolio website',
   'information website',
+  'copy of a popular website',
   'flappy bird clone',
   'todo list app',
   'closet organizer app',
