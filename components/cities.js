@@ -12,8 +12,7 @@ const CityDiv = styled.div`
     border: 1px solid #e6e6e6;
     border-radius: 3px;
     box-shadow: 0 4px 4px rgba(0,0,0,0.5);
-    width: 200px;
-    height: 100px;
+    padding: 30px;
     cursor: pointer;
     transition: filter 0.2s ease-in-out;
 
